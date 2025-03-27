@@ -96,8 +96,8 @@ d.RedemptionGhost extends NPC {
   + lootTable: LootTable
   + expValue: int
 - Phương thức:
-  + patrol() 
-  + chaseTarget()
+  + patrol() //Điều khiển quái vật tuần tra trong một khu vực định sẵn khi không phát hiện người chơi.
+  + chaseTarget() //Đuổi theo người chơi hoặc mục tiêu được chỉ định khi phát hiện.
 
 6. Creep (Kế thừa Monster)
 ■ NormalCreep:
@@ -105,14 +105,14 @@ d.RedemptionGhost extends NPC {
     • attackPattern: BasicMelee
     • movementType: (Ground/Flying)
   + Phương thức:
-    • basicAttack()
+    • basicAttack()//hành vi tấn công cơ bản
 
 ■ EliteCreep:
   + Thuộc tính:
     • specialAbility: Ability
     • eliteBuff: Buff
   + Phương thức:
-    • useSpecialAbility()
+    • useSpecialAbility()//kỹ năng đặc biệt
 
 7. Boss (Kế thừa Monster)
 ■ TitanLord:
@@ -120,15 +120,15 @@ d.RedemptionGhost extends NPC {
     • defenseMode: boolean
     • boulderSystem: ProjectileSystem
   + Phương thức:
-    • summonBoulders()
-    • activateDefense()
+    • summonBoulders()// Triệu hồi đá tảng
+    • activateDefense()// Kích hoạt phòng thủ
 
 ■ DragonKing:
   + Thuộc tính:
     • flightHeight: int
     • fireAura: ParticleSystem
   + Phương thức:
-    • breatheFire()
+    • breatheFire() //Phun lửa
 
 
 
@@ -140,7 +140,7 @@ III. WORLD SYSTEMS
   + levelOrder: Level[]
 - Phương thức:
   + loadLevel() //Tải tilemap, spawn điểm, hiệu ứng môi trường
-  + updateWorldState()
+  + updateWorldState()//cập nhật trạng thái tổng thể của thế giới game,
 
 2. Level (Abstract)
 - Thuộc tính:
@@ -148,7 +148,7 @@ III. WORLD SYSTEMS
   + spawnPoints: SpawnPoint[]
   + environmentalEffects: EnvEffect[]
 - Phương thức:
-  + spawnEntities()
+  + spawnEntities()//Khởi tạo và đặt các entity 
   + checkCompletion()//Kiểm tra điều kiện hoàn thành level
 
 ■ TempleLevel:
@@ -167,24 +167,24 @@ IV. GAMEPLAY SYSTEMS
   + hitDetection: HitboxSystem
   + damageCalculator: DamageFormula
 - Phương thức:
-  + registerAttack()
+  + registerAttack() // tấn công 
   + applyDamage()//Tính toán sát thương dựa trên công/thủ
-  + calculateKnockback()
+  + calculateKnockback() //Tính lực đẩy lùi
 
 2. FragmentSystem // Quản lí sức mạnh đặc biệt
 - Thuộc tính:
   + fragmentEffects: FragmentEffect[]
 - Phương thức:
   + activateFragmentPower()// Kích hoạt sức mạnh đặc biệt khi thu thập đủ fragment
-  + checkCombination()
+  + checkCombination() //Kiểm tra sự kết hợp giữa các Fragment (mảnh vỡ) mà player thu thập
 
 3. QuestSystem // Quản lí nhiệm vụ
 - Thuộc tính:
   + activeQuests: Quest[]
   + completedQuests: Quest[]
 - Phương thức:
-  + startQuest()
-  + checkProgress()
+  + startQuest() //Khởi động một nhiệm vụ (quest) mới
+  + checkProgress() //Kiểm tra và cập nhật tiến độ nhiệm vụ
 
 V. MANAGERS
 --------------------------------
@@ -195,21 +195,21 @@ V. MANAGERS
   + minimap: Minimap
 - Phương thức:
   + updateHUD() //Cập nhật thanh máu/năng lượng
-  + showDialogue()
+  + showDialogue() //Hiển thị hội thoại giữa player và NPC
 
 2. SaveManager // Lưu, tải game
 - Thuộc tính:
   + saveSlots: SaveData[]
 - Phương thức:
   + saveGameState()// Lưu vị trí player, trạng thái quest vào file
-  + loadGameState()
+  + loadGameState()//Khôi phục trạng thái game từ dữ liệu đã lưu
 
 3. InputManager // Quản lí input
 - Thuộc tính:
   + keyBindings: KeyConfig[]
 - Phương thức:
-  + getInput()
-  + remapControls()
+  + getInput()//Đọc và xử lý input từ người chơi 
+  + remapControls() //Cho phép người chơi tùy chỉnh phím điều khiển.
 
 VI. SPECIAL EFFECTS
 --------------------------------
@@ -219,16 +219,16 @@ VI. SPECIAL EFFECTS
   + emitters: Emitter[]
 - Phương thức:
   + spawnEffect()//Tạo hiệu ứng particle (lửa, khói, magic)
-  + updateParticles()
+  + updateParticles()//Cập nhật trạng thái của tất cả hiệu ứng hạt
 
 2. AudioSystem // Âm thanh
 - Thuộc tính:
   + audioClips: SoundLibrary
   + activeChannels: AudioChannel[]
 - Phương thức:
-  + playSFX()
-  + playBGM()
-  + setVolume()
+  + playSFX()//Phát âm thanh hiệu ứng
+  + playBGM() //Phát nhạc nền
+  + setVolume()//Điều chỉnh âm lượng
 
 --------------------------------------------------
 SƠ ĐỒ KẾ THỪA HOÀN CHỈNH:
