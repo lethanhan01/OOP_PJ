@@ -1,3 +1,4 @@
+
 --------------------------------------------------
 CẤU TRÚC GAME "PARADISE SEEKER" - BẢN MỞ RỘNG
 --------------------------------------------------
@@ -17,110 +18,137 @@ CẤU TRÚC GAME "PARADISE SEEKER" - BẢN MỞ RỘNG
   • dropLoot() - Rớt vật phẩm khi chết
 1.2 Các loại quái cụ thể:
 ■ Vua titan (Titania)
-- Thuộc tính riêng:
 *dành cho chiêu 1
+thuộc tính:
   + int defense;  // Phòng thủ hiện tại
   + int baseDefense;  // Phòng thủ gốc (để reset sau khi hiệu ứng kết thúc)
   + boolean hasTriggeredHeal = false;  // Kiểm tra đã kích hoạt hiệu ứng chưa
-*dành cho chiêu 2
-  + int normalAttackCount = 0;  // Đếm số lần đánh thường
-  + long immuneStartTime = 0;  // Thời điểm bắt đầu miễn nhiễm
-  + boolean isImmune = false;  // Trạng thái miễn nhiễm
-- Phương thức riêng:
-*dành cho chiêu 1
+Phương thức:
   +checkHPAndBuff() //check máu và hồi phục
   +generateParticle()//hiển thị hiệu ứng hồi máu
 *dành cho chiêu 2
+Thuộc tính:
+  + int normalAttackCount = 0;  // Đếm số lần đánh thường
+  + long immuneStartTime = 0;  // Thời điểm bắt đầu miễn nhiễm
+  + boolean isImmune = false;  // Trạng thái miễn nhiễm
+Phương thức:
   +performNormalAttack()// đếm số lần đánh thường
   +activateImmunity()// kích hoạt miễn nhiễm
   +update()// kiểm tra thời gian miễn nhiễm
   +damagePlayer(int attack)// chỉ nhận sát thunogw nếu không miễn nhiễm
-■ FireDrake (Draconis)
-- Thuộc tính riêng:
+■ Vua rồng (Draconis)
 *dành cho chiêu 1
+Thuộc tính:
   + long lastEnergyBallTime = 0;  // Thời điểm lần cuối dùng skill
   + boolean isWarningActive = false;  // Trạng thái cảnh báo
   + Rectangle warningArea;  // Vùng cảnh báo (vòng tròn)
+Phương thức:
   + int energyBallDamage = 250;  // Sát thương
-*dành cho chiêu 2
- + int skill1Count = 0;  // Đếm số lần dùng Skill 1
- + boolean isAuraActive = false;  // Trạng thái vòng tròn
- + Rectangle auraArea;  // Vùng xung quanh boss
- + int auraDamage = 250;  // Sát thương
-- Phương thức riêng:
-*dành cho  chiêu 1
   + useEnergyBall() //phương thức tạo quả cầu năng lượng
   + draw() // hiển thị cảnh báo trong phương thức draw
   + update()// 2 phương thức trên được gọi trong update
 *dành cho chiêu 2
+Thuộc tính:
+ + int skill1Count = 0;  // Đếm số lần dùng Skill 1
+ + boolean isAuraActive = false;  // Trạng thái vòng tròn
+ + Rectangle auraArea;  // Vùng xung quanh boss
+ + int auraDamage = 250;  // Sát thương
+Phương thức:
  + checkSkill1Count()// kích hoạt vòng tròn sau 3 lần tung skill 1
  + update()// xử lí sát thương khi người chơi vào vùng
  + draw(Graphics2D g2)// vẽ vòng tròn
  + useEnergyBall()// cập nhật đếm skill 1
 ■ Đại pháp sư nyx (Infernia)
-- Thuộc tính riêng:
 *dành cho chiêu 1
+Thuộc tính:
 + boolean isStealth = false;
 + long lastStealthTime = 0;
 + int stealthDuration = 2000; // 2s tàng hình
 + int visibleDuration = 2000; // 2s hiện hình
-*dành cho chiêu 2
-+ boolean hasSummoned = false;
-+ long battleStartTime;
-+ ArrayList<Entity> demonLords = new ArrayList<>();
-- Phương thức riêng:
-*dành cho chiêu 1
+Phương thức:
 +updateStealth()// điểu khiển tàng hình
 +update() // vẽ
 +damagePlayer(int attack)// xử lí khi tàng hình
-*dành cho chièu 2
+*dành cho chiêu 2
+Thuộc tính:
++ boolean hasSummoned = false;
++ long battleStartTime;
++ ArrayList<Entity> demonLords = new ArrayList<>();
+Phương thức:
 +checkSummon() // phương thức triệu hồi
 +update()// cập nhật trong vòng lặp chính
 +changeAlpha() // để làm trong suốt
 +generateParticle() //cho hiệu ứng
 +damagePlayer()// xử lý sát thương
 4.Vua paradise
--thuộc tính riêng:
+*dành cho chiêu 1
+Thuộc tính:
 + long lastSickleAttackTime = 0;
 + ArrayList<SickleEnergy> sickles = new ArrayList<>();
-
+Phương thức: 
++SickleEnergy(GamePanel gp) //projecttile mới
++update()//di chuyển theo hướng, xử lí va chạm với player
++sickleAttack()// tạo 3 lưỡi liềm theo các hướng khác nhau
+*dành cho chiêu 2
+Thuộc tính:
++ boolean hasRevived = false;
++ int originalWidth, originalHeight;
+Phương thức:
++update()// cập nhật để hồi sinh
++revive()/reset trạng thái và tăng kích thước
+*dành cho chiêu 3
+Thuộc tính:
++ long lastMoveTime = 0;
++ boolean isVulnerable = false;
+Phương thức:
++updateVulnerability()// kiểm tra trạng thái
++damagePlayer(int attack) // nhận damage của player
 2. HỆ THỐNG NPC
 --------------------------------
-2.1 Lớp NPC (cha)
-- Thuộc tính:
-  • String name
-  • float x, y
-  • String[] dialogues
-  • boolean isInteractable
-  • Texture portrait
-
-- Phương thức:
-  • interact(Player) - Mở hộp thoại
-  • giveQuest() - Giao nhiệm vụ phụ
-  • trade() - Mở cửa hàng
+2.1 Lớp NPC_Merchant (cha) kế thừa từ lớp Entity
+-thuộc tính giống lớp entity
+-Phương thức:
++setDialpgue()// thiết lập hội thoại
++speak()//hiển thị hội thoại
++setItem()// Vật phẩm cần bán
 
 2.2 Các NPC quan trọng:
-■ Titan Elder (Titania)
-- Vai trò: Hướng dẫn cách vào hang
-- Thuộc tính riêng:
-  • boolean fragmentInfoGiven
-- Phương thức riêng:
-  • revealCaveLocation()
-
-■ Dragon Sage (Draconis)
-- Vai trò: Bán vật phẩm chống lửa
-- Thuộc tính riêng:
-  • Item[] fireResistanceItems
-- Phương thức riêng:
-  • sellSpecialItem()
-
-■ Ghost Merchant (Infernia)
-- Vai trò: Trao đổi linh hồn quỷ
-- Thuộc tính riêng:
-  • int soulCurrency
-- Phương thức riêng:
-  • tradeSouls()
-
+a.Map1:Linh mục già
+Thuộc tính:
+- image: sprite ông già 
+- dialogues[20]: hướng dẫn câu đố 
+- items[10]: đèn pin, bản đồ 
+Phương thức:
+- speak(): hiển thị dialogue 
+- trade_sell(): mở shop 
+- setAction(): đứng yên 
+b.Map2:Người khổng lồ thân thiện
+Thuộc tính:
+- size: Gấp 3 lần NPC thường 
+- hp: 500 (không thể bị giết) 
+- dialogues[]: Chỉ đường đến hang Titan 
+Phương thức:
+- speak(): Kể về Fragment of Earth 
+- checkDrop(): Tặng đá kháng động đất khi được giúp đỡ 
+- damageReaction(): Không tấn công lại 
+c.Map3: Tù nhân rồng
+Thuộc tính:
+-image: sprite bị xích 
+- dialogues[20]: mật mã 
+- hp: 1 
+Phương thức:
+- speak(): đưa manh mối 
+- dyingAnimation(): rơi chìa khóa 
+- draw(): hiệu ứng lửa bằng generateParticle() 
+d.Map4: Hồn ma cứu rỗi
+Thuộc tính:
+- invincible: true 
+- dialogues[]: Mật khẩu mở tháp Nyx 
+- lightRadius: 5 (tỏa sáng) 
+Phương thức: 
+- speak(): Tiết lộ điểm yếu của Nyx 
+- draw(): Tỏa ánh sáng xua tan bóng tối 
+- teleport(): Biến mất sau khi nói xong 
 3. CẬP NHẬT LỚP LIÊN QUAN
 --------------------------------
 3.1 Lớp Level (bổ sung)
