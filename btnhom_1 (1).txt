@@ -1,0 +1,184 @@
+--------------------------------------------------
+CẤU TRÚC GAME "PARADISE SEEKER" - BẢN MỞ RỘNG
+--------------------------------------------------
+
+1. HỆ THỐNG QUÁI VẬT (Monster) kế thừa từ lớp Entity
+--------------------------------
+1.1 Lớp Monster (cha)
+- Thuộc tính:
+  +attackUp1,attackDown1,..: hình ảnh tấn công
+  +rectangle_attackArea: vùng tấn công
+  
+- Phương thức:
+  • update(Player) - AI di chuyển/tấn công
+  • takeDamage(int)
+  + damagePlayer(int attack): gây sát thương cho người chơi
+  + dyingAnimation(): Hiệu ứng khi chết
+  • dropLoot() - Rớt vật phẩm khi chết
+1.2 Các loại quái cụ thể:
+■ Vua titan (Titania)
+- Thuộc tính riêng:
+*dành cho chiêu 1
+  + int defense;  // Phòng thủ hiện tại
+  + int baseDefense;  // Phòng thủ gốc (để reset sau khi hiệu ứng kết thúc)
+  + boolean hasTriggeredHeal = false;  // Kiểm tra đã kích hoạt hiệu ứng chưa
+*dành cho chiêu 2
+  + int normalAttackCount = 0;  // Đếm số lần đánh thường
+  + long immuneStartTime = 0;  // Thời điểm bắt đầu miễn nhiễm
+  + boolean isImmune = false;  // Trạng thái miễn nhiễm
+- Phương thức riêng:
+*dành cho chiêu 1
+  +checkHPAndBuff() //check máu và hồi phục
+  +generateParticle()//hiển thị hiệu ứng hồi máu
+*dành cho chiêu 2
+  +performNormalAttack()// đếm số lần đánh thường
+  +activateImmunity()// kích hoạt miễn nhiễm
+  +update()// kiểm tra thời gian miễn nhiễm
+  +damagePlayer(int attack)// chỉ nhận sát thunogw nếu không miễn nhiễm
+■ FireDrake (Draconis)
+- Thuộc tính riêng:
+*dành cho chiêu 1
+  + long lastEnergyBallTime = 0;  // Thời điểm lần cuối dùng skill
+  + boolean isWarningActive = false;  // Trạng thái cảnh báo
+  + Rectangle warningArea;  // Vùng cảnh báo (vòng tròn)
+  + int energyBallDamage = 250;  // Sát thương
+*dành cho chiêu 2
+ + int skill1Count = 0;  // Đếm số lần dùng Skill 1
+ + boolean isAuraActive = false;  // Trạng thái vòng tròn
+ + Rectangle auraArea;  // Vùng xung quanh boss
+ + int auraDamage = 250;  // Sát thương
+- Phương thức riêng:
+*dành cho  chiêu 1
+  + useEnergyBall() //phương thức tạo quả cầu năng lượng
+  + draw() // hiển thị cảnh báo trong phương thức draw
+  + update()// 2 phương thức trên được gọi trong update
+*dành cho chiêu 2
+ + checkSkill1Count()// kích hoạt vòng tròn sau 3 lần tung skill 1
+ + update()// xử lí sát thương khi người chơi vào vùng
+ + draw(Graphics2D g2)// vẽ vòng tròn
+ + useEnergyBall()// cập nhật đếm skill 1
+■ Đại pháp sư nyx (Infernia)
+- Thuộc tính riêng:
+*dành cho chiêu 1
++ boolean isStealth = false;
++ long lastStealthTime = 0;
++ int stealthDuration = 2000; // 2s tàng hình
++ int visibleDuration = 2000; // 2s hiện hình
+*dành cho chiêu 2
++ boolean hasSummoned = false;
++ long battleStartTime;
++ ArrayList<Entity> demonLords = new ArrayList<>();
+- Phương thức riêng:
+*dành cho chiêu 1
++updateStealth()// điểu khiển tàng hình
++update() // vẽ
++damagePlayer(int attack)// xử lí khi tàng hình
+*dành cho chièu 2
++checkSummon() // phương thức triệu hồi
++update()// cập nhật trong vòng lặp chính
++changeAlpha() // để làm trong suốt
++generateParticle() //cho hiệu ứng
++damagePlayer()// xử lý sát thương
+4.Vua paradise
+-thuộc tính riêng:
++ long lastSickleAttackTime = 0;
++ ArrayList<SickleEnergy> sickles = new ArrayList<>();
+
+2. HỆ THỐNG NPC
+--------------------------------
+2.1 Lớp NPC (cha)
+- Thuộc tính:
+  • String name
+  • float x, y
+  • String[] dialogues
+  • boolean isInteractable
+  • Texture portrait
+
+- Phương thức:
+  • interact(Player) - Mở hộp thoại
+  • giveQuest() - Giao nhiệm vụ phụ
+  • trade() - Mở cửa hàng
+
+2.2 Các NPC quan trọng:
+■ Titan Elder (Titania)
+- Vai trò: Hướng dẫn cách vào hang
+- Thuộc tính riêng:
+  • boolean fragmentInfoGiven
+- Phương thức riêng:
+  • revealCaveLocation()
+
+■ Dragon Sage (Draconis)
+- Vai trò: Bán vật phẩm chống lửa
+- Thuộc tính riêng:
+  • Item[] fireResistanceItems
+- Phương thức riêng:
+  • sellSpecialItem()
+
+■ Ghost Merchant (Infernia)
+- Vai trò: Trao đổi linh hồn quỷ
+- Thuộc tính riêng:
+  • int soulCurrency
+- Phương thức riêng:
+  • tradeSouls()
+
+3. CẬP NHẬT LỚP LIÊN QUAN
+--------------------------------
+3.1 Lớp Level (bổ sung)
+- Thuộc tính mới:
+  • List<Enemy> activeEnemies
+  • List<NPC> npcs
+  • SpawnPoint[] spawnPoints
+
+- Phương thức mới:
+  • spawnEnemies(int difficulty)
+  • spawnNPCs()
+  • resetEnemies()
+
+3.2 Lớp Player (bổ sung)
+- Thuộc tính mới:
+  • int soulsCollected
+  • boolean hasFireResistance
+  
+- Phương thức mới:
+  • collectSoul(int amount)
+  • toggleFireResistance()
+
+4. HỆ THỐNG TƯƠNG TÁC
+--------------------------------
+4.1 Lớp InteractionSystem
+- Thuộc tính:
+  • float interactRange
+  • NPC currentInteractingNPC
+  
+- Phương thức:
+  • checkInteractables(Player)
+  • startDialogue(NPC)
+  • endDialogue()
+
+4.2 Lớp EnemySpawner
+- Thuộc tính:
+  • int currentWave
+  • int enemiesPerWave
+  
+- Phương thức:
+  • spawnWave(int waveNumber)
+  • increaseDifficulty()
+
+5. CẬP NHẬT UI
+--------------------------------
+5.1 Lớp UI (bổ sung)
+- Thuộc tính mới:
+  • Texture enemyHealthBar
+  • Texture npcIndicator
+  
+- Phương thức mới:
+  • drawEnemyHealth(Enemy)
+  • drawNPCInteractionPrompt()
+
+--------------------------------------------------
+SƠ ĐỒ QUAN HỆ MỚI:
+Player ↔ InteractionSystem ↔ NPC
+           ↑
+EnemySpawner → Level → Enemy
+                     ↘ NPC
+--------------------------------------------------
