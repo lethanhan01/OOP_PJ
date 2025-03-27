@@ -1,0 +1,251 @@
+--------------------------------------------------
+KIẾN TRÚC TỔNG THỂ GAME "PARADISE SEEKER"
+--------------------------------------------------
+
+I. CORE SYSTEMS (HỆ THỐNG LÕI)
+--------------------------------
+1. MainGame
+- Phương thức:
+  + main(String[] args)// Điểm khởi đầu game
+
+2. GameEngine
+- Thuộc tính:
+  + gameWindow: GameWindow
+  + sceneManager: SceneManager
+  + assetLoader: AssetLoader
+- Phương thức:
+  + initializeEngine()//Khởi tạo engine
+  + startMainLoop()// bắt đầu vòng lặp game
+
+3. GamePanel
+- Thuộc tính:
+  + currentState: GameState
+  + player: Player
+  + world: World
+  + uiManager: UIManager
+- Phương thức:
+  + processInput()// xử lí input
+  + updateGame()//Cập nhật game
+  + renderGame()// Hiển thị game
+
+II. ENTITY (HỆ THỐNG ĐỐI TƯỢNG)
+--------------------------------
+1. Entity (Abstract Base Class)
+- Thuộc tính cơ bản:
+  + transform: Transform
+  + collider: Collider
+  + spriteRenderer: SpriteRenderer
+  + stats: EntityStats (health, attack, defense)
+- Phương thức:
+  + update() // Cập nhật trạng thái entity mỗi frame
+  + render() //Vẽ entity lên màn hình
+  + onCollision() //Xử lý khi va chạm với entity khác
+
+2. Character (Abstract) (kế thừa từ Entity)
+- Thuộc tính:
+  + movementSpeed: float
+  + facingDirection: Vector2
+  + inventory: Inventory
+- Phương thức:
+  + move() //Di chuyển character
+  + faceDirection() //Thay đổi hướng nhìn/sprite
+
+3. NPC (Kế thừa Character)
+- Thuộc tính:
+  + dialogueTree: Dialogue
+  + interactionType: (Shop/Quest/Info)
+- Phương thức:
+  + interact()// Tương tác với player
+  + offerQuest()// Cung cấp nhiệm vụ
+*Các Npc cụ thể:
+a. OldPriest extends NPC 
+-Thuộc tính:
+  + private Item[] specialItems; // 18 items đặc biệt (gồm đèn pin, bản đồ)
+-Phương thức:
+  + interact() // Hiển thị hội thoại và mở shop
+b.FriendlyGiant extends NPC 
+-Thuộc tính:
+  + private float scale = 3.0f; // Kích thước gấp 3 lần bình thường
+-Phương thức:
+  + interact() // Nói về Fragment of Earth
+c.DragonPrisoner extends NPC 
+-Thuộc tính:
+  + private boolean canDropEarthquakeStone = true;
+-Phương thức thêm:
+  + giveEarthquakeStone() // Thực hiện trao đá kháng động đất
+d.RedemptionGhost extends NPC {
+-Thuộc tính:
+  + private boolean hasKey = true;
+-Phương thức thêm:
+  + revealSecretCode() // Hiển thị mật mã khi tương tác
+4. Player (kế thừa Chracter)
+- Thuộc tính đặc biệt:
+  + fragments: Fragment[3]
+  + skillHotbar: Skill[4]
+  + currentEnergy: float
+  + playerState: (Normal/Stealth/Invincible)
+- Phương thức:
+  + useSkill() // sử dụng kĩ năng
+  + interact() //Hiển thị thoại
+  + dash() //Di chuyển nhanh
+  + collectFragment() //thu thập và quản lý các mảnh Fragment
+
+5. Monster (Abstract)
+- Thuộc tính:
+  + aiController: AIController
+  + lootTable: LootTable
+  + expValue: int
+- Phương thức:
+  + patrol() 
+  + chaseTarget()
+
+6. Creep (Kế thừa Monster)
+■ NormalCreep:
+  + Thuộc tính:
+    • attackPattern: BasicMelee
+    • movementType: (Ground/Flying)
+  + Phương thức:
+    • basicAttack()
+
+■ EliteCreep:
+  + Thuộc tính:
+    • specialAbility: Ability
+    • eliteBuff: Buff
+  + Phương thức:
+    • useSpecialAbility()
+
+7. Boss (Kế thừa Monster)
+■ TitanLord:
+  + Thuộc tính:
+    • defenseMode: boolean
+    • boulderSystem: ProjectileSystem
+  + Phương thức:
+    • summonBoulders()
+    • activateDefense()
+
+■ DragonKing:
+  + Thuộc tính:
+    • flightHeight: int
+    • fireAura: ParticleSystem
+  + Phương thức:
+    • breatheFire()
+
+
+
+III. WORLD SYSTEMS
+--------------------------------
+1. WorldManager
+- Thuộc tính:
+  + currentLevel: Level
+  + levelOrder: Level[]
+- Phương thức:
+  + loadLevel() //Tải tilemap, spawn điểm, hiệu ứng môi trường
+  + updateWorldState()
+
+2. Level (Abstract)
+- Thuộc tính:
+  + tilemap: Tilemap
+  + spawnPoints: SpawnPoint[]
+  + environmentalEffects: EnvEffect[]
+- Phương thức:
+  + spawnEntities()
+  + checkCompletion()//Kiểm tra điều kiện hoàn thành level
+
+■ TempleLevel:
+  + puzzleManager: PuzzleSystem
+■ TitaniaLevel:
+  + earthquakeSystem: QuakeSystem
+■ DraconisLevel:
+  + lavaSystem: LavaPhysics
+■ InferniaLevel:
+  + darknessSystem: DarknessManager
+
+IV. GAMEPLAY SYSTEMS
+--------------------------------
+1. CombatSystem // Xử lí chiến đấu
+- Thuộc tính:
+  + hitDetection: HitboxSystem
+  + damageCalculator: DamageFormula
+- Phương thức:
+  + registerAttack()
+  + applyDamage()//Tính toán sát thương dựa trên công/thủ
+  + calculateKnockback()
+
+2. FragmentSystem // Quản lí sức mạnh đặc biệt
+- Thuộc tính:
+  + fragmentEffects: FragmentEffect[]
+- Phương thức:
+  + activateFragmentPower()// Kích hoạt sức mạnh đặc biệt khi thu thập đủ fragment
+  + checkCombination()
+
+3. QuestSystem // Quản lí nhiệm vụ
+- Thuộc tính:
+  + activeQuests: Quest[]
+  + completedQuests: Quest[]
+- Phương thức:
+  + startQuest()
+  + checkProgress()
+
+V. MANAGERS
+--------------------------------
+1. UIManager // Giao diện người dùng
+- Thuộc tính:
+  + healthBar: ProgressBar
+  + energyBar: ChargingBar
+  + minimap: Minimap
+- Phương thức:
+  + updateHUD() //Cập nhật thanh máu/năng lượng
+  + showDialogue()
+
+2. SaveManager // Lưu, tải game
+- Thuộc tính:
+  + saveSlots: SaveData[]
+- Phương thức:
+  + saveGameState()// Lưu vị trí player, trạng thái quest vào file
+  + loadGameState()
+
+3. InputManager // Quản lí input
+- Thuộc tính:
+  + keyBindings: KeyConfig[]
+- Phương thức:
+  + getInput()
+  + remapControls()
+
+VI. SPECIAL EFFECTS
+--------------------------------
+1. ParticleSystem // Hiệu ứng hạt
+- Thuộc tính:
+  + particlePool: Particle[]
+  + emitters: Emitter[]
+- Phương thức:
+  + spawnEffect()//Tạo hiệu ứng particle (lửa, khói, magic)
+  + updateParticles()
+
+2. AudioSystem // Âm thanh
+- Thuộc tính:
+  + audioClips: SoundLibrary
+  + activeChannels: AudioChannel[]
+- Phương thức:
+  + playSFX()
+  + playBGM()
+  + setVolume()
+
+--------------------------------------------------
+SƠ ĐỒ KẾ THỪA HOÀN CHỈNH:
+Entity
+├── Character
+│   ├── Player
+│   └── NPC
+└── Monster
+    ├── Creep
+    │   ├── NormalCreep
+    │   └── EliteCreep
+    └── Boss
+        ├── TitanLord	
+        ├── DragonKing
+        ├── Nyx
+        └── ParadiseKing
+
+--------------------------------------------------
+
+--------------------------------------------------
