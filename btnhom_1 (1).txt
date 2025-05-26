@@ -1,6 +1,6 @@
 
 --------------------------------------------------
-CẤU TRÚC GAME "PARADISE SEEKER" - BẢN MỞ RỘNG
+CẤU TRÚC GAME "PARADISE SEEKER" 
 --------------------------------------------------
 
 1. HỆ THỐNG QUÁI VẬT (Monster) kế thừa từ lớp Entity
@@ -16,7 +16,9 @@ CẤU TRÚC GAME "PARADISE SEEKER" - BẢN MỞ RỘNG
   + damagePlayer(int attack): gây sát thương cho người chơi
   + dyingAnimation(): Hiệu ứng khi chết
   • dropLoot() - Rớt vật phẩm khi chết
+
 1.2 Các loại quái cụ thể:
+
 ■ Vua titan (Titania)
 *dành cho chiêu 1
 thuộc tính:
@@ -36,6 +38,7 @@ Phương thức:
   +activateImmunity()// kích hoạt miễn nhiễm
   +update()// kiểm tra thời gian miễn nhiễm
   +damagePlayer(int attack)// chỉ nhận sát thunogw nếu không miễn nhiễm
+
 ■ Vua rồng (Draconis)
 *dành cho chiêu 1
 Thuộc tính:
@@ -58,6 +61,7 @@ Phương thức:
  + update()// xử lí sát thương khi người chơi vào vùng
  + draw(Graphics2D g2)// vẽ vòng tròn
  + useEnergyBall()// cập nhật đếm skill 1
+
 ■ Đại pháp sư nyx (Infernia)
 *dành cho chiêu 1
 Thuộc tính:
@@ -80,6 +84,7 @@ Phương thức:
 +changeAlpha() // để làm trong suốt
 +generateParticle() //cho hiệu ứng
 +damagePlayer()// xử lý sát thương
+
 4.Vua paradise
 *dành cho chiêu 1
 Thuộc tính:
@@ -103,6 +108,7 @@ Thuộc tính:
 Phương thức:
 +updateVulnerability()// kiểm tra trạng thái
 +damagePlayer(int attack) // nhận damage của player
+
 2. HỆ THỐNG NPC
 --------------------------------
 2.1 Lớp NPC_Merchant (cha) kế thừa từ lớp Entity
@@ -204,9 +210,4 @@ Phương thức:
   • drawNPCInteractionPrompt()
 
 --------------------------------------------------
-SƠ ĐỒ QUAN HỆ MỚI:
-Player ↔ InteractionSystem ↔ NPC
-           ↑
-EnemySpawner → Level → Enemy
-                     ↘ NPC
---------------------------------------------------
+
